@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no">
+	<title>Chúc mừng sinh nhật</title>
+	<link href="content/favicon.png" rel="icon">
+	<link href="content/style.css" rel="stylesheet">
+	<link href="content/pcrespon.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Patrick+Hand" rel="stylesheet">
+	<script>
+		var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+		if (isMobile) {
+			document.querySelector('link[rel="stylesheet"]').setAttribute('properties', 'content/mobrespon.css');
+		}
+	</script>
+</head>
+<body>
+	<div class="flame"></div>
+	<div class="flame2"></div>
+	<div class="flame3"></div>
+	<div class="flame4"></div>
+	<div class="flame5"></div>
+	<img class="img" src="content/cake.png" alt="Cake">
+	<h1>
+		<a href="" class="typewrite" data-period="2000" data-type='[ "Text 1", "Text 2", "Text 3", "Text 4", "Text 5" ]'><span class="wrap"></span></a>
+	</h1>
+	<script>
+		var TxtType = function(el, toRotate, period) {
+        	this.toRotate = toRotate;
+        	this.el = el;
+        	this.loopNum = 0;
+        	this.period = parseInt(period, 10) || 2000;
+        	this.txt = '';
+        	this.tick();
+        	this.isDeleting = false;
+    	};
+
+    	TxtType.prototype.tick = function() {
+    		// If this reach end, stop anything
+        
+        	var i = this.loopNum % this.toRotate.length;
+        	var fullTxt = this.toRotate[i];
+        	if (this.isDeleting) {
+        		this.txt = fullTxt.substring(0, this.txt.length - 1);
+        	} else {
+        		this.txt = fullTxt.substring(0, this.txt.length + 1);
+        	}
+        this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+        var that = this;
+        var delta = 200 - Math.random() * 100;
+        if (this.isDeleting) { delta /= 2; }
+        if (!this.isDeleting && this.txt === fullTxt) {
+        	delta = this.period;
+        	this.isDeleting = true;
+        	console.log('finish write '+ this.txt+ 'text at index: [' + i+ ']');
+        	// If this reach end job, stop anything
+        	if (i == this.toRotate.length - 1) 
+        		{
+        			return;
+        		}
+        } else if (this.isDeleting && this.txt === '') {
+        	this.isDeleting = false;
+        	this.loopNum++;
+        	delta = 500;
+        	console.log('finish delete '+ fullTxt + 'text at index: [' + i+ ']');
+        }
+        setTimeout(function() {
+        	that.tick();
+        }, delta);
+    	};
+    	window.onload = function() {
+    	    var elements = document.getElementsByClassName('typewrite');
+    	    for (var i=0; i<elements.length; i++) {
+    	        var toRotate = elements[i].getAttribute('data-type');
+    	        var period = elements[i].getAttribute('data-period');
+    	        if (toRotate) {
+        	      new TxtType(elements[i], JSON.parse(toRotate), period);
+        	    }
+        	}
+        	var css = document.createElement("style");
+        	css.type = "text/css";
+        	css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+        	document.body.appendChild(css);
+    	};
+	</script>
+</body>
+</html>
